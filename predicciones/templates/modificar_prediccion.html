@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Modificar Predicción{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Modificar Predicción</h2>
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="estudiante">Estudiante:</label>
+                    <input type="text" class="form-control" id="estudiante" name="estudiante" value="{{ prediccion.estudiante }}" required>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="anio">Año:</label>
+                    <input type="number" class="form-control" id="anio" name="anio" value="{{ prediccion.anio }}" required>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="periodo">Periodo:</label>
+                    <input type="number" class="form-control" id="periodo" name="periodo" value="{{ prediccion.periodo }}" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campos para las materias -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="matematicas">Matemáticas:</label>
+                    <input type="text" class="form-control" id="matematicas" name="matematicas" value="{{ prediccion.resultados.Matemáticas }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="espanol">Español:</label>
+                    <input type="text" class="form-control" id="espanol" name="espanol" value="{{ prediccion.resultados.Español }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="biologia">Biología:</label>
+                    <input type="text" class="form-control" id="biologia" name="biologia" value="{{ prediccion.resultados.Biología }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="c_sociales">C-Sociales:</label>
+                    <input type="text" class="form-control" id="c_sociales" name="c_sociales" value="{{ prediccion.resultados.C_Sociales }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ingles">Inglés:</label>
+                    <input type="text" class="form-control" id="ingles" name="ingles" value="{{ prediccion.resultados.Inglés }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="edu_fisica">Edu-Física:</label>
+                    <input type="text" class="form-control" id="edu_fisica" name="edu_fisica" value="{{ prediccion.resultados.Edu_Física }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="informatica">Informática:</label>
+                    <input type="text" class="form-control" id="informatica" name="informatica" value="{{ prediccion.resultados.Informática }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="artes">Artes:</label>
+                    <input type="text" class="form-control" id="artes" name="artes" value="{{ prediccion.resultados.Artes }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="religion">Religión:</label>
+                    <input type="text" class="form-control" id="religion" name="religion" value="{{ prediccion.resultados.Religión }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="filosofia">Filosofía:</label>
+                    <input type="text" class="form-control" id="filosofia" name="filosofia" value="{{ prediccion.resultados.Filosofía }}" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="economia">Economía:</label>
+                    <input type="text" class="form-control" id="economia" name="economia" value="{{ prediccion.resultados.Economía }}" required>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Actualizar</button>
+    </form>
+</div>
+{% endblock %}

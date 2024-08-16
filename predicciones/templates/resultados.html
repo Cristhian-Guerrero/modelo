@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultados de Predicción{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Resultados de la Predicción</h2>
+
+    <!-- Información del Estudiante -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h5>Estudiante: {{ estudiante }}</h5>
+            <h5>Año: {{ anio }}</h5>
+            <h5>Periodo: {{ periodo }}</h5>
+        </div>
+        <div class="col-md-6 text-right">
+            <h5>Top 3 Carreras Recomendadas:</h5>
+            <ul>
+                {% for carrera, probabilidad in top_3_carreras %}
+                    <li>{{ carrera }}: {{ probabilidad }}%</li>
+                {% endfor %}
+            </ul>
+
+            <h5>Materias con las Notas Más Altas:</h5>
+            <ul>
+                {% for materia, nota in top_materias %}
+                    <li>{{ materia }}: {{ nota }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Gráfico de Barras con Línea -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <canvas id="predictionBarChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Gráfico de Radar -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <canvas id="predictionRadarChart"></canvas>
+        </div>
+    </div>
+    
+    <a href="{% url 'inicio' %}" class="btn btn-secondary mt-4">Volver</a>
+</div>
+
+<!-- Incluyendo Chart.js desde un CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const resultados = {{ resultados|safe }};
+    const labels = Object.keys(resultados);
+    const data = Object.values(resultados);
+
+    // Ordenar los datos de mayor a menor
+    const sortedData = labels.map((label, index) => {
+        return { label: label, value: data[index] };
+    }).sort((a, b) => b.value - a.value);
+
+    const sortedLabels = sortedData.map(item => item.label);
+    const sortedValues = sortedData.map(item => item.value);
+
+    // Gráfico de Barras con Línea
+    const ctxBar = document.getElementById('predictionBarChart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: sortedLabels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Porcentaje de Elección',
+                    data: sortedValues,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    type: 'line',
+                    label: 'Tendencia',
+                    data: sortedValues,
+                    fill: false,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    tension: 0.1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(...sortedValues) + 1, // Ajustar la escala para una mejor visualización
+                    ticks: {
+                        color: '#333'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#333'
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico de Radar Mejorado
+    const ctxRadar = document.getElementById('predictionRadarChart').getContext('2d');
+    new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+            labels: sortedLabels,
+            datasets: [{
+                label: 'Porcentaje de Elección',
+                data: sortedValues,
+                fill: true,
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(255, 99, 132, 1)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                r: {
+                    angleLines: {
+                        color: 'rgba(200, 200, 200, 0.5)' // Líneas más visibles
+                    },
+                    grid: {
+                        color: 'rgba(200, 200, 200, 0.5)' // Cuadrícula más visible
+                    },
+                    pointLabels: {
+                        color: '#333',
+                        font: {
+                            size: 14 // Tamaño de fuente más grande
+                        }
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: Math.max(...sortedValues) + 1 // Ajustar la escala para una mejor visualización
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#333'
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

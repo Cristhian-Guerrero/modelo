@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Listado de Predicciones{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Listado de Predicciones</h2>
+    <form method="post" action="{% url 'comparar_predicciones' %}">
+        {% csrf_token %}
+        <div class="table-responsive">
+            <table class="table table-striped mt-4">
+                <thead>
+                    <tr>
+                        <th scope="col">Seleccionar</th>
+                        <th scope="col">Estudiante</th>
+                        <th scope="col">Año</th>
+                        <th scope="col">Periodo</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prediccion in predicciones %}
+                    <tr>
+                        <td>
+                            <input class="form-check-input" type="checkbox" name="prediccion_ids" value="{{ prediccion.id }}">
+                        </td>
+                        <td>{{ prediccion.estudiante }}</td>
+                        <td>{{ prediccion.anio }}</td>
+                        <td>{{ prediccion.periodo }}</td>
+                        <td>
+                            <a href="{% url 'visualizar_prediccion' prediccion.id %}" class="btn btn-info btn-sm">Visualizar</a> <!-- Nuevo botón -->
+                            <a href="{% url 'modificar_prediccion' prediccion.id %}" class="btn btn-warning btn-sm">Modificar</a>
+                            <a href="{% url 'eliminar_prediccion' prediccion.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta predicción?');">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Comparar Seleccionados</button>
+    </form>
+    <a href="{% url 'inicio' %}" class="btn btn-secondary mt-4">Volver</a>
+</div>
+{% endblock %}

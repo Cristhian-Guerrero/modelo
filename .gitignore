@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.sqlite3
+
+# If you're using Redis:
+*.rdb
+
+# If you're using PostgreSQL:
+*.pgsql
+
+# If you're using MySQL:
+*.mysql
+
+# If you're using SQLite:
+*.sqlite3
+
+# If you're using venvs
+venv/
+
+# Local settings
+local_settings.py
+
+# Static files
+/staticfiles/

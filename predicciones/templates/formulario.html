@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Realizar Predicción{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Ingresar Notas para Predicción</h2>
+
+    {% if messages %}
+        <div class="alert alert-danger">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Nombre del Estudiante -->
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="estudiante" class="form-label">Nombre del Estudiante</label>
+                <input type="text" class="form-control" id="estudiante" name="estudiante" required>
+            </div>
+        </div>
+
+        <!-- Año y Periodo -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="anio" class="form-label">Año</label>
+                <input type="number" class="form-control" id="anio" name="anio" min="6" max="11" required>
+            </div>
+            <div class="col-md-6">
+                <label for="periodo" class="form-label">Periodo</label>
+                <input type="number" class="form-control" id="periodo" name="periodo" min="1" max="3" required>
+            </div>
+        </div>
+
+        <!-- Campos de Notas -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="matematicas" class="form-label">Matemáticas</label>
+                <input type="number" class="form-control" id="matematicas" name="matematicas" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="espanol" class="form-label">Español</label>
+                <input type="number" class="form-control" id="espanol" name="espanol" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="biologia" class="form-label">Biología</label>
+                <input type="number" class="form-control" id="biologia" name="biologia" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="c_sociales" class="form-label">C-Sociales</label>
+                <input type="number" class="form-control" id="c_sociales" name="c_sociales" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="ingles" class="form-label">Inglés</label>
+                <input type="number" class="form-control" id="ingles" name="ingles" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="edu_fisica" class="form-label">Edu-Física</label>
+                <input type="number" class="form-control" id="edu_fisica" name="edu_fisica" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="informatica" class="form-label">Informática</label>
+                <input type="number" class="form-control" id="informatica" name="informatica" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="artes" class="form-label">Artes</label>
+                <input type="number" class="form-control" id="artes" name="artes" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="religion" class="form-label">Religión</label>
+                <input type="number" class="form-control" id="religion" name="religion" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="filosofia" class="form-label">Filosofía</label>
+                <input type="number" class="form-control" id="filosofia" name="filosofia" min="0" max="5" step="0.1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="economia" class="form-label">Economía</label>
+                <input type="number" class="form-control" id="economia" name="economia" min="0" max="5" step="0.1" required>
+            </div>
+        </div>
+
+        <!-- Botón de Enviar -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Predecir</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

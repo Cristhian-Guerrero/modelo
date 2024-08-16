@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Más allá de las notas{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Más allá de las notas: IA para una orientación vocacional completa</h1>
+    <p class="lead">Explora tus opciones y descubre las mejores carreras para ti.</p>
+    <div class="mt-4">
+        <a href="{% url 'predecir' %}" class="btn btn-primary btn-lg me-2">Realizar Predicción</a>
+        <a href="{% url 'comparar_predicciones' %}" class="btn btn-secondary btn-lg ms-2">Comparar Predicciones</a>
+    </div>
+</div>
+{% endblock %}
