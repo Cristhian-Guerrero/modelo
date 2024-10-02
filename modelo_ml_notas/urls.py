@@ -19,6 +19,7 @@ from django.urls import path, include
 from predicciones import views
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
     path('predicciones/', include('predicciones.urls')),
     path('', views.inicio, name='inicio'),  # Ruta para la página de inicio

@@ -17,11 +17,11 @@
     <form method="post">
         {% csrf_token %}
 
-        <!-- Nombre del Estudiante -->
+      <!-- Nombre del Estudiante -->
         <div class="row mb-3">
             <div class="col-md-12">
                 <label for="estudiante" class="form-label">Nombre del Estudiante</label>
-                <input type="text" class="form-control" id="estudiante" name="estudiante" required>
+                <input type="text" class="form-control" id="estudiante" name="estudiante" placeholder="Ingresa el nombre del estudiante" value="{{ valores_anteriores.estudiante }}" required>
             </div>
         </div>
 
@@ -29,60 +29,34 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="anio" class="form-label">Año</label>
-                <input type="number" class="form-control" id="anio" name="anio" min="6" max="11" required>
+                <input type="number" class="form-control" id="anio" name="anio" min="6" max="11" value="{{ valores_anteriores.anio|default_if_none:9 }}" required>
             </div>
             <div class="col-md-6">
                 <label for="periodo" class="form-label">Periodo</label>
-                <input type="number" class="form-control" id="periodo" name="periodo" min="1" max="3" required>
+                <input type="number" class="form-control" id="periodo" name="periodo" min="1" max="3" value="{{ valores_anteriores.periodo|default_if_none:1 }}" required>
             </div>
         </div>
 
-        <!-- Campos de Notas -->
+        <!-- Agrupación de Materias con Sliders -->
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="matematicas" class="form-label">Matemáticas</label>
-                <input type="number" class="form-control" id="matematicas" name="matematicas" min="0" max="5" step="0.1" required>
+            {% for key, materia in materias.items %}
+            <div class="col-md-6 mb-4">
+                <div class="card p-3" id="group_{{ materia }}" style="border: 1px solid #ddd; border-radius: 10px; transition: all 0.3s;">
+                    <div class="form-group">
+                        <label for="{{ materia }}" class="form-label">{{ key }}</label>
+                        <div class="input-group d-flex align-items-center">
+                            <span class="me-2">0</span>
+                            <!-- Slider -->
+                            <input type="range" class="form-range slider" id="slider_{{ materia }}" min="0" max="5" step="0.1" value="{{ valores_anteriores.materia|default_if_none:3 }}" oninput="updateInput('{{ materia }}', this.value)" style="width: 50%;">
+                            <span class="ms-2">5</span>
+                            <!-- Campo de texto sincronizado -->
+                            <input type="text" class="form-control form-control-sm text-center ms-3" id="{{ materia }}" name="{{ materia }}" value="{{ valores_anteriores.materia|default_if_none:3 }}" oninput="updateSlider('{{ materia }}', this.value)" style="width: 60px;">
+                        </div>
+                        <small class="text-danger d-none" id="error_{{ materia }}">Debe ser un número entre 0 y 5.</small>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="espanol" class="form-label">Español</label>
-                <input type="number" class="form-control" id="espanol" name="espanol" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="biologia" class="form-label">Biología</label>
-                <input type="number" class="form-control" id="biologia" name="biologia" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="c_sociales" class="form-label">C-Sociales</label>
-                <input type="number" class="form-control" id="c_sociales" name="c_sociales" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="ingles" class="form-label">Inglés</label>
-                <input type="number" class="form-control" id="ingles" name="ingles" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="edu_fisica" class="form-label">Edu-Física</label>
-                <input type="number" class="form-control" id="edu_fisica" name="edu_fisica" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="informatica" class="form-label">Informática</label>
-                <input type="number" class="form-control" id="informatica" name="informatica" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="artes" class="form-label">Artes</label>
-                <input type="number" class="form-control" id="artes" name="artes" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="religion" class="form-label">Religión</label>
-                <input type="number" class="form-control" id="religion" name="religion" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="filosofia" class="form-label">Filosofía</label>
-                <input type="number" class="form-control" id="filosofia" name="filosofia" min="0" max="5" step="0.1" required>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="economia" class="form-label">Economía</label>
-                <input type="number" class="form-control" id="economia" name="economia" min="0" max="5" step="0.1" required>
-            </div>
+            {% endfor %}
         </div>
 
         <!-- Botón de Enviar -->
@@ -91,4 +65,50 @@
         </div>
     </form>
 </div>
+
+<!-- Script para sincronizar slider, campo de texto, prevenir letras en notas y resaltar -->
+<script>
+    // Actualizar el campo de texto cuando se mueve el slider
+    function updateInput(materia, valor) {
+        document.getElementById(materia).value = valor;
+    }
+
+    // Actualizar el slider cuando se modifica el campo de texto
+    function updateSlider(materia, valor) {
+        const slider = document.getElementById('slider_' + materia);
+        const errorField = document.getElementById('error_' + materia);
+        valor = valor.replace(',', '.');  // Reemplazar comas por puntos
+        const num = parseFloat(valor);
+
+        if (!isNaN(num) && num >= 0 && num <= 5) {
+            slider.value = num;
+            errorField.classList.add('d-none');  // Ocultar error si es válido
+        } else {
+            errorField.classList.remove('d-none');  // Mostrar error si no es válido
+        }
+    }
+
+    // Prevenir que el usuario introduzca letras en los campos de notas (pero no en el nombre del estudiante)
+    document.querySelectorAll('input[name^="matematicas"], input[name^="espanol"], input[name^="biologia"], input[name^="c_sociales"], input[name^="ingles"], input[name^="edu_fisica"], input[name^="informatica"], input[name^="artes"], input[name^="religion"], input[name^="filosofia"], input[name^="economia"]').forEach(function(input) {
+        input.addEventListener('input', function(e) {
+            if (e.target.value.match(/[^0-9.,]/)) {
+                e.target.value = e.target.value.replace(/[^0-9.,]/g, '');
+            }
+        });
+    });
+
+    // Resaltar la "card" cuando se interactúe con el slider, campo de texto o nombre de materia
+    document.querySelectorAll('.form-control, .form-range').forEach(function(input) {
+        input.addEventListener('focus', function() {
+            const group = document.getElementById('group_' + this.id.replace('slider_', ''));
+            group.style.backgroundColor = 'rgba(0, 123, 255, 0.1)';
+            group.style.border = '2px solid rgba(0, 123, 255, 0.5)';
+        });
+        input.addEventListener('blur', function() {
+            const group = document.getElementById('group_' + this.id.replace('slider_', ''));
+            group.style.backgroundColor = '';
+            group.style.border = '1px solid #ddd';
+        });
+    });
+</script>
 {% endblock %}

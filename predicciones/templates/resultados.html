@@ -23,7 +23,7 @@
 
             <h5>Materias con las Notas Más Altas:</h5>
             <ul>
-                {% for materia, nota in top_materias %}
+                {% for materia, nota in materias_top %}
                     <li>{{ materia }}: {{ nota }}</li>
                 {% endfor %}
             </ul>
@@ -51,7 +51,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    const resultados = {{ resultados|safe }};
+    const resultados = {{ resultados_json|safe }};
     const labels = Object.keys(resultados);
     const data = Object.values(resultados);
 
@@ -93,7 +93,7 @@
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: Math.max(...sortedValues) + 1, // Ajustar la escala para una mejor visualización
+                    max: Math.max(...sortedValues) + 1,
                     ticks: {
                         color: '#333'
                     }
@@ -130,19 +130,19 @@
             scales: {
                 r: {
                     angleLines: {
-                        color: 'rgba(200, 200, 200, 0.5)' // Líneas más visibles
+                        color: 'rgba(200, 200, 200, 0.5)'
                     },
                     grid: {
-                        color: 'rgba(200, 200, 200, 0.5)' // Cuadrícula más visible
+                        color: 'rgba(200, 200, 200, 0.5)'
                     },
                     pointLabels: {
                         color: '#333',
                         font: {
-                            size: 14 // Tamaño de fuente más grande
+                            size: 14
                         }
                     },
                     suggestedMin: 0,
-                    suggestedMax: Math.max(...sortedValues) + 1 // Ajustar la escala para una mejor visualización
+                    suggestedMax: Math.max(...sortedValues) + 1
                 }
             },
             plugins: {

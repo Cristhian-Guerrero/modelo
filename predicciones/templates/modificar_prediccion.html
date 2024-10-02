@@ -1,104 +1,98 @@
 {% extends 'base.html' %}
+{% load dict_extras %}
 
 {% block title %}Modificar Predicción{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center">Modificar Predicción</h2>
-    <form method="post" class="needs-validation" novalidate>
+
+    <form method="post">
         {% csrf_token %}
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="estudiante">Estudiante:</label>
-                    <input type="text" class="form-control" id="estudiante" name="estudiante" value="{{ prediccion.estudiante }}" required>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="anio">Año:</label>
-                    <input type="number" class="form-control" id="anio" name="anio" value="{{ prediccion.anio }}" required>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="periodo">Periodo:</label>
-                    <input type="number" class="form-control" id="periodo" name="periodo" value="{{ prediccion.periodo }}" required>
-                </div>
+
+        <!-- Nombre del Estudiante -->
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="estudiante" class="form-label">Nombre del Estudiante</label>
+                <input type="text" class="form-control" id="estudiante" name="estudiante" value="{{ prediccion.estudiante }}" required>
             </div>
         </div>
 
-        <!-- Campos para las materias -->
-        <div class="row">
+        <!-- Año y Periodo -->
+        <div class="row mb-3">
             <div class="col-md-6">
-                <div class="form-group">
-                    <label for="matematicas">Matemáticas:</label>
-                    <input type="text" class="form-control" id="matematicas" name="matematicas" value="{{ prediccion.resultados.Matemáticas }}" required>
-                </div>
+                <label for="anio" class="form-label">Año</label>
+                <input type="number" class="form-control" id="anio" name="anio" min="6" max="11" value="{{ prediccion.anio }}" required>
             </div>
             <div class="col-md-6">
-                <div class="form-group">
-                    <label for="espanol">Español:</label>
-                    <input type="text" class="form-control" id="espanol" name="espanol" value="{{ prediccion.resultados.Español }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="biologia">Biología:</label>
-                    <input type="text" class="form-control" id="biologia" name="biologia" value="{{ prediccion.resultados.Biología }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="c_sociales">C-Sociales:</label>
-                    <input type="text" class="form-control" id="c_sociales" name="c_sociales" value="{{ prediccion.resultados.C_Sociales }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="ingles">Inglés:</label>
-                    <input type="text" class="form-control" id="ingles" name="ingles" value="{{ prediccion.resultados.Inglés }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="edu_fisica">Edu-Física:</label>
-                    <input type="text" class="form-control" id="edu_fisica" name="edu_fisica" value="{{ prediccion.resultados.Edu_Física }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="informatica">Informática:</label>
-                    <input type="text" class="form-control" id="informatica" name="informatica" value="{{ prediccion.resultados.Informática }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="artes">Artes:</label>
-                    <input type="text" class="form-control" id="artes" name="artes" value="{{ prediccion.resultados.Artes }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="religion">Religión:</label>
-                    <input type="text" class="form-control" id="religion" name="religion" value="{{ prediccion.resultados.Religión }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="filosofia">Filosofía:</label>
-                    <input type="text" class="form-control" id="filosofia" name="filosofia" value="{{ prediccion.resultados.Filosofía }}" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="economia">Economía:</label>
-                    <input type="text" class="form-control" id="economia" name="economia" value="{{ prediccion.resultados.Economía }}" required>
-                </div>
+                <label for="periodo" class="form-label">Periodo</label>
+                <input type="number" class="form-control" id="periodo" name="periodo" min="1" max="3" value="{{ prediccion.periodo }}" required>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Actualizar</button>
+        <!-- Agrupación de Materias con Sliders -->
+        <div class="row">
+            {% for key, materia in materias.items %}
+            <div class="col-md-6 mb-4">
+                <div class="card p-3" id="group_{{ materia }}" style="border: 1px solid #ddd; border-radius: 10px; transition: all 0.3s;">
+                    <div class="form-group">
+                        <label for="{{ materia }}" class="form-label">{{ key }}</label>
+                        <div class="input-group d-flex align-items-center">
+                            <span class="me-2">0</span>
+                            <!-- Slider -->
+                            <input type="range" class="form-range slider" id="slider_{{ materia }}" min="0" max="5" step="0.1" value="{{ valores_anteriores|get_item:materia }}" oninput="updateInput('{{ materia }}', this.value)" style="width: 50%;">
+                            <span class="ms-2">5</span>
+                            <!-- Campo de texto sincronizado -->
+                            <input type="text" class="form-control form-control-sm text-center ms-3" id="{{ materia }}" name="{{ materia }}" value="{{ valores_anteriores|get_item:materia }}" oninput="updateSlider('{{ materia }}', this.value)" style="width: 60px;">
+                        </div>
+                        <small class="text-danger d-none" id="error_{{ materia }}">Debe ser un número entre 0 y 5.</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Botón de Enviar -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+        </div>
     </form>
 </div>
+
+<!-- Script para sincronizar slider, campo de texto, prevenir letras en notas y resaltar -->
+<script>
+    // Actualizar el campo de texto cuando se mueve el slider
+    function updateInput(materia, valor) {
+        document.getElementById(materia).value = valor;
+    }
+
+    // Actualizar el slider cuando se modifica el campo de texto
+    function updateSlider(materia, valor) {
+        const slider = document.getElementById('slider_' + materia);
+        const errorField = document.getElementById('error_' + materia);
+        valor = valor.replace(',', '.');  // Reemplazar comas por puntos
+        const num = parseFloat(valor);
+
+        if (!isNaN(num) && num >= 0 && num <= 5) {
+            slider.value = num;
+            errorField.classList.add('d-none');  // Ocultar error si es válido
+        } else {
+            errorField.classList.remove('d-none');  // Mostrar error si no es válido
+        }
+    }
+
+    // Resaltar la "card" cuando se interactúe con el slider o campo de texto
+    document.querySelectorAll('.form-control, .form-range').forEach(function(input) {
+        input.addEventListener('focus', function() {
+            const group = document.getElementById('group_' + this.id.replace('slider_', ''));
+            group.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+            group.style.border = '2px solid rgba(255, 0, 0, 0.5)';
+        });
+        input.addEventListener('blur', function() {
+            const group = document.getElementById('group_' + this.id.replace('slider_', ''));
+            group.style.backgroundColor = '';
+            group.style.border = '1px solid #ddd';
+        });
+    });
+</script>
 {% endblock %}
